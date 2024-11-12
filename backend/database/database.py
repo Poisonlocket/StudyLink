@@ -16,8 +16,26 @@ engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}:{port}/{db
 Base = declarative_base()
 
 # Association table for many-to-many relationship
+"""
+student = Table(
+    'class_students', Base.metadata,
+    Column('class_id', Integer, ForeignKey('classes.id'), primary_key=True),
+    Column('student_id', Integer, ForeignKey('students.id'), primary_key=True)
+)
+"""
+# Define the Classes table
+"""
+class Class(Base):
+    __tablename__ = 'classes'
 
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), nullable=False)
+    students = relationship('Student', secondary=class_students, back_populates='classes')
 
+    def __repr__(self):
+        return f"<Class(name={self.name})>"
+"""
+# Define the Students table
 class Studysession(Base):
     __tablename__: str = 'students'
 
