@@ -59,7 +59,7 @@ class StudySession:
     @topics.setter
     def topics(self, topics: list):
         self.topics = topics
-    
+
 
     @property
     def place(self):
