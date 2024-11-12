@@ -4,6 +4,7 @@ from flask import Flask, Blueprint, Response, jsonify
 
 from backend.types.studysession import StudySession
 
+
 test_sessions = [
     StudySession(
         name="Math Study Group",
@@ -46,6 +47,11 @@ test_sessions = [
         place="Room 303"
     ),
 ]
+
+#
+for study_session in test_sessions:
+    study_session.insert()
+
 
 studysession_api = Blueprint('simple_page', __name__)
 

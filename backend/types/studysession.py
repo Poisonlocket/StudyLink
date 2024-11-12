@@ -1,5 +1,7 @@
 from datetime import datetime
+from backend.database.database import insert
 import uuid
+
 
 class StudySession:
     def __init__(self, name: str, start_time: datetime, end_time: datetime, students: list, topics: list, place: str ):
@@ -82,3 +84,16 @@ class StudySession:
             "topics": self._topics,
             "place": self._place
         }
+
+    def insert(self):
+        attendee_list = self.students
+        attendees = ", ".join(attendee_list)
+        subject_list = self.topics
+        subjects = ", ".join(subject_list)
+        insert(self._id,
+               self._name,
+               self._start_time,
+               self._end_time,
+               attendees,
+               subjects,
+               self._place)

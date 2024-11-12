@@ -35,28 +35,30 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+"""
 def test_data():
-    uuid1 = str(uuid.uuid4())
-    uuid2 = str(uuid.uuid4())
-    stdy_session1 = Studysession(uuid=uuid1, name="some random session",
-                                 start_time=datetime(2023, 6, 21, 17, 8, 11),
-                                 end_time=datetime(2022, 7, 31, 3, 50, 1),
-                                 students="Klara, Achmed, Michael, Mohamed, Lorenzo, Obama",
-                                 topics="math, german, english, quantum physics",
-                                 place="Nigeria")
+uuid1 = str(uuid.uuid4())
+uuid2 = str(uuid.uuid4())
+stdy_session1 = Studysession(uuid=uuid1, name="some random session",
+                             start_time=datetime(2023, 6, 21, 17, 8, 11),
+                             end_time=datetime(2022, 7, 31, 3, 50, 1),
+                             students="Klara, Achmed, Michael, Mohamed, Lorenzo, Obama",
+                             topics="math, german, english, quantum physics",
+                             place="Nigeria")
 
-    stdy_session2 = Studysession(uuid=uuid2, name="some faggot is part taking in this",
-                                 start_time=datetime(2023, 6, 21, 17, 8, 11),
-                                 end_time=datetime(2022, 7, 31, 3, 50, 1),
-                                 students="xi shing ping, Victor, Putin, Stalin, Mussolini",
-                                 topics="history, geography, geometry",
-                                 place="Niger")
+stdy_session2 = Studysession(uuid=uuid2, name="some faggot is part taking in this",
+                             start_time=datetime(2023, 6, 21, 17, 8, 11),
+                             end_time=datetime(2022, 7, 31, 3, 50, 1),
+                             students="xi shing ping, Victor, Putin, Stalin, Mussolini",
+                             topics="history, geography, geometry",
+                             place="Niger")
 
-    session.add(stdy_session1)
-    session.add(stdy_session2)
-    session.commit()
+session.add(stdy_session1)
+session.add(stdy_session2)
+session.commit()
+"""
 
-def query_date():
+def find_all():
     query = session.query(Studysession).all()
     for dataset in query:
         print(f"{dataset.uuid}, {dataset.name}, {dataset.start_time}, {dataset.end_time}, {dataset.students}, {dataset.topics}, {dataset.place}")
@@ -69,6 +71,12 @@ def delete(uuid):
     session.delete(session.query(Studysession).filter_by(uuid=uuid).first())
     session.commit()
 
+def drop():
+    bucket = session.query(Studysession).all()
+    for item in bucket:
+        session.delete(item)
+    session.commit()
+
 def update(uuid, **kwargs):
     change:dict = {}
     for key, value in kwargs.items():
@@ -77,14 +85,21 @@ def update(uuid, **kwargs):
     session.commit()
 
 if __name__ == "__main__":
+    """
     test_data()
     uuid = str(uuid.uuid4())
+
     insert(uuid, "lessgooo",
            datetime(2023, 6, 21, 17, 8, 11),
            datetime(2022, 7, 31, 3, 50, 1),
            "asdf, wert, yxcv ,dfgh, rtzu",
            "math, being gay, some shit, fff",
            "no where")
+
     # delete("ec85498a-a50a-4cfd-838f-4ebc7246a687")
     update("ffbcaabd-ad19-4747-af92-e2922857e4a3", name="min schwanz isch gross")
-    query_date()
+    drop()
+
+
+    """
+    find_all()
