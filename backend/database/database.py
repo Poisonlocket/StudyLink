@@ -15,26 +15,6 @@ engine = create_engine(f"mysql+pymysql://{username}:{password}@{host}:{port}/{db
 # Define the base class for models
 Base = declarative_base()
 
-# Association table for many-to-many relationship
-"""
-student = Table(
-    'class_students', Base.metadata,
-    Column('class_id', Integer, ForeignKey('classes.id'), primary_key=True),
-    Column('student_id', Integer, ForeignKey('students.id'), primary_key=True)
-)
-"""
-# Define the Classes table
-"""
-class Class(Base):
-    __tablename__ = 'classes'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    students = relationship('Student', secondary=class_students, back_populates='classes')
-
-    def __repr__(self):
-        return f"<Class(name={self.name})>"
-"""
 # Define the Students table
 class Studysession(Base):
     __tablename__: str = 'students'
@@ -46,7 +26,6 @@ class Studysession(Base):
     students:list = Column(String(255), nullable=False) #TODO: is a list of students needs modifying
     topics:list[str] = Column(String(255), nullable=False)
     place:str = Column(String(255), nullable=False)
-
 
 
 # Create all tables in the database
@@ -82,6 +61,30 @@ def query_date():
     for dataset in query:
         print(f"{dataset.uuid}, {dataset.name}, {dataset.start_time}, {dataset.end_time}, {dataset.students}, {dataset.topics}, {dataset.place}")
 
+def insert(uuid, name, start_time, end_time, students, topics, place):
+    session.add(Studysession(uuid=uuid, name=name, start_time=start_time, end_time=end_time, students=students, topics=topics, place=place))
+    session.commit()
+
+def delete(uuid):
+    session.delete(session.query(Studysession).filter_by(uuid=uuid).first())
+    session.commit()
+
+def update(uuid, **kwargs):
+    change:dict = {}
+    for key, value in kwargs.items():
+        change[key] = value
+    session.query(Studysession).filter_by(uuid=uuid).update(change)
+    session.commit()
+
 if __name__ == "__main__":
     test_data()
+    uuid = str(uuid.uuid4())
+    insert(uuid, "lessgooo",
+           datetime(2023, 6, 21, 17, 8, 11),
+           datetime(2022, 7, 31, 3, 50, 1),
+           "asdf, wert, yxcv ,dfgh, rtzu",
+           "math, being gay, some shit, fff",
+           "no where")
+    # delete("ec85498a-a50a-4cfd-838f-4ebc7246a687")
+    update("ffbcaabd-ad19-4747-af92-e2922857e4a3", name="min schwanz isch gross")
     query_date()
