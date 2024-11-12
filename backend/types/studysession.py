@@ -3,45 +3,45 @@ import uuid
 
 class StudySession:
     def __init__(self, name: str, start_time: datetime, end_time: datetime, students: list, topics: list, place: str ):
-        self.id = str(uuid.uuid4())
-        self.name = name
-        self.start_time = start_time
-        self.end_time = end_time
+        self._id = str(uuid.uuid4())
+        self._name = name
+        self._start_time = start_time
+        self._end_time = end_time
         self._students = students
-        self.topics = topics
-        self.place = place
+        self._topics = topics
+        self._place = place
 
     @property
     def id(self):
-        return self.id
+        return self._id
 
     @id.setter
-    def id(self, new_id: uuid.uuid4()):
-        new_id = str(new_id)
-        self.id = new_id
+    def id(self, new_id: uuid.UUID):
+        self._id = str(new_id)
+
     @property
     def name(self):
-        return self.name
+        return self._name
 
     @name.setter
     def name(self, name: str):
-        self.name = name
+        self._name = name
 
     @property
     def start_time(self):
-        return self.start_time
+        return self._start_time
 
     @start_time.setter
     def start_time(self, start_time: datetime):
-        self.start_time = start_time
+        self._start_time = start_time
 
     @property
     def end_time(self):
-        return self.end_time
+        return self._end_time
 
     @end_time.setter
     def end_time(self, end_time: datetime):
-        self.end_time = end_time
+        self._end_time = end_time
 
     @property
     def students(self):
@@ -54,20 +54,31 @@ class StudySession:
 
     @property
     def topics(self):
-        return self.topics
+        return self._topics
     
     @topics.setter
     def topics(self, topics: list):
-        self.topics = topics
+        self._topics = topics
 
 
     @property
     def place(self):
-        return self.place
+        return self._place
     
     @place.setter
     def place(self, place: str):
-        self.place = place
+        self._place = place
 
     def size(self):
         return len(self._students)
+
+    def to_dict(self):
+        return {
+            "id": self._id,
+            "name": self._name,
+            "start_time": self._start_time.isoformat(),
+            "end_time": self._end_time.isoformat(),
+            "students": self._students,
+            "topics": self._topics,
+            "place": self._place
+        }
