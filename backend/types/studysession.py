@@ -1,5 +1,5 @@
 from datetime import datetime
-from backend.database.database import insert
+from backend.database.database import insert, db_update
 import uuid
 
 
@@ -97,3 +97,16 @@ class StudySession:
                attendees,
                subjects,
                self._place)
+
+    def update(self, uuid):
+        attendee_list = self.students
+        attendees = ", ".join(attendee_list)
+        subject_list = self.topics
+        subjects = ", ".join(subject_list)
+        db_update(uuid,
+                  name=self._name,
+                  start_time=self._start_time,
+                  end_time=self._end_time,
+                  students=attendees,
+                  topics=subjects,
+                  place=self._place)

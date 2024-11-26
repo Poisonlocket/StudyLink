@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from flask import Flask, Blueprint, Response, jsonify
+from flask import Flask, Blueprint, Response, jsonify, request
 
 from backend.types.studysession import StudySession
 
@@ -46,9 +46,17 @@ test_sessions = [
         topics=["Shakespeare", "Modern Literature"],
         place="Room 303"
     ),
+    StudySession(
+        name="Math studygroup II",
+        start_time=datetime.now() + timedelta(days=5),
+        end_time=datetime.now() + timedelta(days=5, hours=4),
+        students=["Diana, Ethan, Bob"],
+        topics=["Algebra", "Calculus"],
+        place="Room 101"
+    ),
 ]
 
-#
+
 for study_session in test_sessions:
     study_session.insert()
 
@@ -73,3 +81,56 @@ def get_specific_studysession(id: str):
 
     # If no match is found, return a 404 error response
     return jsonify({"error": f"StudySession with id {id} not found"}), 404
+
+@studysession_api.get("/studysession/subject/<subject>")
+def get_specific_studysession_by_subject(subject: str) -> tuple[Response, int]:
+    session = []
+    for studysession in test_sessions:
+        if subject in studysession.topics:
+            session.append(studysession.to_dict())
+            continue
+    if session != []:
+        return jsonify(session), 200
+    return jsonify({"error": f"StudySession with subject {subject} not found"}), 404
+
+@studysession_api.post("/studysession/post")
+def post_new_studysession() -> Response:
+    data = request.get_json()
+    name = data.get("name")
+    start_time = data.get("start_time")
+    end_time = data.get("end_time")
+    students = data.get("students")
+    topics = data.get("topics")
+    place = data.get("place")
+
+    session = StudySession(name=name,
+                           start_time=start_time,
+                           end_time=end_time,
+                           students=students,
+                           topics=topics,
+                           place=place)
+
+    session.insert()
+    return Response("StudySession posted", 201)
+
+
+@studysession_api.put("/studysession/<id>")
+def put_studysession(id: str) -> Response:
+    data = request.get_json()
+    name = data.get("name")
+    start_time = data.get("start_time")
+    end_time = data.get("end_time")
+    students = data.get("students")
+    topics = data.get("topics")
+    place = data.get("place")
+
+    session = StudySession(name=name,
+                           start_time=start_time,
+                           end_time=end_time,
+                           students=students,
+                           topics=topics,
+                           place=place)
+
+    session.update(id)
+
+    return Response("StudySession putted", 201)
